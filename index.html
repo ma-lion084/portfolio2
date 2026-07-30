@@ -3,11 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ポートフォリオ</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="まーらいおんのポートフォリオ。Web制作×動画編集を軸に、制作実績を紹介しています。">
+  <title>まーらいおん | Web Developer / Video Creator</title>
+
+  <!-- Google Fonts（CSSより前に配置） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>ポートフォリオへようこそ</h1>
-  <script src="script.js"></script>
+
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="#top" class="header__logo">まーらいおん</a>
+
+      <button class="header__toggle" id="menuToggle" aria-label="メニューを開く" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="header__nav" id="globalNav">
+        <ul class="header__list">
+          <li><a href="#top">Top</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#works">Works</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== ① Top ===== -->
+    <section class="hero" id="top">
+      <div class="hero__inner">
+        <img src="images/profile.jpg" alt="まーらいおんのアイコン" class="hero__photo" width="160" height="160">
+        <h1 class="hero__name">まーらいおん</h1>
+        <p class="hero__role">Web Developer / Video Creator</p>
+        <p class="hero__copy">
+          「Web制作 × 動画編集」を軸に、<br>
+          使いやすいサイト制作を目指しています。
+        </p>
+        <a href="#works" class="btn btn--primary">制作実績を見る</a>
+      </div>
+    </section>
+
+    <!-- ===== ② About ===== -->
+    <section class="section" id="about">
+      <div class="section__inner">
+        <h2 class="section__title">About<span class="section__sub">自己紹介</span></h2>
+
+        <p class="about__text">
+          Web制作・動画編集を学びながら、使いやすいサイト制作を目指しています。<br>
+          HTML / CSS / JavaScript を中心に学習中で、動画編集では
+          Premiere Pro や OBS を使った制作経験があります。
+        </p>
+
+        <h3 class="about__heading">使用ツール</h3>
+        <ul class="tool-list">
+          <li class="tool-list__item">HTML</li>
+          <li class="tool-list__item">CSS</li>
+          <li class="tool-list__item">JavaScript</li>
+          <li class="tool-list__item">VS Code</li>
+          <li class="tool-list__item">GitHub</li>
+          <li class="tool-list__item">Premiere Pro</li>
+          <li class="tool-list__item">OBS</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== ③ Works（最重要） ===== -->
+    <section class="section section--gray" id="works">
+      <div class="section__inner">
+        <h2 class="section__title">Works<span class="section__sub">制作実績</span></h2>
+
+        <div class="works__grid">
+
+          <article class="card">
+            <img src="images/work-seikotsuin.jpg" alt="整骨院ホームページのスクリーンショット" class="card__img" loading="lazy">
+            <div class="card__body">
+              <h3 class="card__title">整骨院ホームページ</h3>
+              <p class="card__text">HTML / CSS / JavaScript で制作した整骨院のホームページ。レスポンシブ対応。</p>
+              <a href="#" class="card__link" target="_blank" rel="noopener">サイトを見る →</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/work-youtube.jpg" alt="YouTubeゲーム実況チャンネルのサムネイル" class="card__img" loading="lazy">
+            <div class="card__body">
+              <h3 class="card__title">YouTubeゲーム実況</h3>
+              <p class="card__text">Premiere Pro と OBS を使用したゲーム実況チャンネルの企画・編集・運営。</p>
+              <a href="#" class="card__link" target="_blank" rel="noopener">チャンネルを見る →</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/work-js.jpg" alt="JavaScript作品のスクリーンショット" class="card__img" loading="lazy">
+            <div class="card__body">
+              <h3 class="card__title">JavaScript作品</h3>
+              <p class="card__text">JavaScriptで制作したインタラクティブな作品。DOM操作やイベント処理を活用。</p>
+              <a href="#" class="card__link" target="_blank" rel="noopener">作品を見る →</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/work-github.jpg" alt="GitHubリポジトリのイメージ" class="card__img" loading="lazy">
+            <div class="card__body">
+              <h3 class="card__title">GitHub公開コード</h3>
+              <p class="card__text">学習の過程で書いたコードをGitHubで公開しています。</p>
+              <a href="#" class="card__link" target="_blank" rel="noopener">GitHubを見る →</a>
+            </div>
+          </article>
+
+          <article class="card card--coming">
+            <div class="card__body">
+              <h3 class="card__title">Flutterアプリ</h3>
+              <p class="card__text">現在学習中。オリジナルアプリを今後追加予定です。</p>
+              <span class="card__badge">Coming Soon</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ④ Skills ===== -->
+    <section class="section" id="skills">
+      <div class="section__inner">
+        <h2 class="section__title">Skills<span class="section__sub">スキル</span></h2>
+
+        <ul class="skill-list">
+          <!-- data-level はJSでバー表示に使用 -->
+          <li class="skill-list__item" data-level="4"><span class="skill-list__name">HTML</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★★★☆</span></li>
+          <li class="skill-list__item" data-level="4"><span class="skill-list__name">CSS</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★★★☆</span></li>
+          <li class="skill-list__item" data-level="2"><span class="skill-list__name">JavaScript</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★☆☆☆</span></li>
+          <li class="skill-list__item" data-level="5"><span class="skill-list__name">Premiere Pro</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★★★★</span></li>
+          <li class="skill-list__item" data-level="4"><span class="skill-list__name">OBS</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★★★☆</span></li>
+          <li class="skill-list__item" data-level="3"><span class="skill-list__name">Git</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★★☆☆</span></li>
+          <li class="skill-list__item" data-level="3"><span class="skill-list__name">GitHub</span><div class="skill-list__bar"><div class="skill-list__fill"></div></div><span class="skill-list__stars">★★★☆☆</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 学習ロードマップ ===== -->
+    <section class="section section--gray" id="roadmap">
+      <div class="section__inner">
+        <h2 class="section__title">Roadmap<span class="section__sub">学習ロードマップ</span></h2>
+
+        <ol class="roadmap">
+          <li class="roadmap__item roadmap__item--done">HTML・CSS</li>
+          <li class="roadmap__item roadmap__item--current">JavaScript</li>
+          <li class="roadmap__item roadmap__item--current">ポートフォリオ制作</li>
+          <li class="roadmap__item">React または Flutter</li>
+          <li class="roadmap__item">オリジナルアプリ開発</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== ⑤ Contact ===== -->
+    <section class="section" id="contact">
+      <div class="section__inner">
+        <h2 class="section__title">Contact<span class="section__sub">お問い合わせ</span></h2>
+
+        <p class="contact__text">お仕事のご依頼・ご相談はこちらからお気軽にどうぞ。</p>
+
+        <ul class="contact__list">
+          <li><a href="mailto:your-email@example.com" class="btn btn--outline">📧 Mail</a></li>
+          <li><a href="#" class="btn btn--outline" target="_blank" rel="noopener">🐦 SNS</a></li>
+          <li><a href="#" class="btn btn--outline" target="_blank" rel="noopener">💻 GitHub</a></li>
+          <li><a href="#" class="btn btn--outline" target="_blank" rel="noopener">▶ YouTube</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p class="footer__copy">&copy; 2025 まーらいおん All Rights Reserved.</p>
+  </footer>
+
+  <script src="js/script.js"defer></script>
 </body>
 </html>
