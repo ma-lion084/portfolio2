@@ -190,4 +190,141 @@
           <li class="skill-list__item fade-up" data-level="2">
             <span class="skill-list__name">JavaScript</span>
             <div class="skill-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" aria-label="JavaScriptの習熟度">
-              <span class="skill-bar__fill
+              <span class="skill-bar__fill" style="--skill-level: 40%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★☆☆☆</span>
+          </li>
+          <li class="skill-list__item fade-up" data-level="3">
+            <span class="skill-list__name">Premiere Pro</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="Premiere Proの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 60%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★★☆☆</span>
+          </li>
+          <li class="skill-list__item fade-up" data-level="3">
+            <span class="skill-list__name">OBS</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="OBSの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 60%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★★☆☆</span>
+          </li>
+          <li class="skill-list__item fade-up" data-level="1">
+            <span class="skill-list__name">Flutter</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Flutterの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 20%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★☆☆☆☆</span>
+          </li>
+        </ul>
+
+        <p class="skills__note">
+          ※ 星の数は自己評価です。学習の進度に応じて更新しています。
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== ⑤ Roadmap ===== -->
+    <section class="section section--gray" id="roadmap">
+      <div class="section__inner">
+        <h2 class="section__title fade-up">Roadmap<span class="section__sub">学習ロードマップ</span></h2>
+
+        <ol class="timeline">
+          <li class="timeline__item is-done fade-up">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <div class="timeline__body">
+              <span class="timeline__date">2024</span>
+              <h3 class="timeline__title">HTML / CSS 基礎</h3>
+              <p class="timeline__text">マークアップの基礎とレスポンシブデザインを習得。整骨院サイトを制作。</p>
+            </div>
+          </li>
+          <li class="timeline__item is-current fade-up">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <div class="timeline__body">
+              <span class="timeline__date">2025</span>
+              <h3 class="timeline__title">JavaScript 実践</h3>
+              <p class="timeline__text">DOM操作・非同期処理を学習中。動きのあるUIを自作できるように取り組んでいます。</p>
+            </div>
+          </li>
+          <li class="timeline__item fade-up">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <div class="timeline__body">
+              <span class="timeline__date">Next</span>
+              <h3 class="timeline__title">Flutter でアプリ開発</h3>
+              <p class="timeline__text">Web制作の知識を活かし、オリジナルアプリのリリースを目標にしています。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== ⑥ Contact ===== -->
+    <section class="section" id="contact">
+      <div class="section__inner section__inner--narrow">
+        <h2 class="section__title fade-up">Contact<span class="section__sub">お問い合わせ</span></h2>
+
+        <p class="contact__lead fade-up">
+          制作のご依頼・ご相談はお気軽にご連絡ください。<br>
+          通常2〜3日以内にご返信いたします。
+        </p>
+
+        <!-- action は Formspree / Google Form 等に差し替えてください -->
+        <form class="form fade-up" id="contactForm" action="#" method="post" novalidate>
+          <div class="form__row">
+            <label class="form__label" for="name">お名前<span class="form__req">必須</span></label>
+            <input class="form__input" type="text" id="name" name="name" required autocomplete="name" placeholder="山田 太郎">
+            <p class="form__error" data-error-for="name"></p>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label" for="email">メールアドレス<span class="form__req">必須</span></label>
+            <input class="form__input" type="email" id="email" name="email" required autocomplete="email" placeholder="example@mail.com">
+            <p class="form__error" data-error-for="email"></p>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label" for="subject">ご相談内容</label>
+            <select class="form__input" id="subject" name="subject">
+              <option value="web">Web制作について</option>
+              <option value="video">動画編集について</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label" for="message">メッセージ<span class="form__req">必須</span></label>
+            <textarea class="form__input form__textarea" id="message" name="message" rows="6" required placeholder="ご依頼内容やご予算などをご記入ください。"></textarea>
+            <p class="form__error" data-error-for="message"></p>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">送信する</button>
+
+          <!-- 送信結果メッセージ (JSから出力 / aria-liveで読み上げ) -->
+          <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
+        </form>
+
+        <ul class="sns fade-up">
+          <li><a href="https://github.com/ma-lion084" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.youtube.com/channel/UCCS2DU565PEn5qqWYDY7l5w" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="mailto:info@example.com">Mail</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__logo">まーらいおん</p>
+      <p class="footer__copy">&copy; <span id="year">2025</span> ma-lion. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ページトップへ戻る -->
+  <button class="to-top" id="toTop" aria-label="ページ上部へ戻る">
+    <span aria-hidden="true">↑</span>
+  </button>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
