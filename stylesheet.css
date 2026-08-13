@@ -1,6 +1,11 @@
 /* ==========================================================
    style.css | まーらいおん Portfolio
    ----------------------------------------------------------
+   設計方針
+   - BEM命名 / 状態は .is-* / JSフックは id・data-* に限定
+   - 色・余白・書体などの値は全て「01. CSS変数」で一元管理
+   - セクションの並び順は index.html の文書構造と1対1で対応
+   ----------------------------------------------------------
    目次
    01. CSS変数(テーマ管理)
    02. リセット・ベース
@@ -18,6 +23,7 @@
    14. ページトップボタン
    15. レスポンシブ(タブレット / PC)
    16. アニメーション抑制(prefers-reduced-motion)
+   17. 印刷対応
    ========================================================== */
 
 /* ==========================================================
@@ -55,6 +61,9 @@
 
   /* アニメーション */
   --transition: 0.3s ease;
+
+  /* ブラウザ標準UI(スクロールバー・フォーム部品)の配色 */
+  color-scheme: light;
 }
 
 /* ダークモード(JSで html に data-theme="dark" を付与) */
@@ -70,6 +79,8 @@
   --color-border: #334155;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
 }
 
 /* ==========================================================
@@ -192,14 +203,15 @@ button {
   width: 100%;
 }
 
-/* スクロールで表示するフェードアップ(JSが .is-visible を付与) */
-.fade-up {
+/* スクロールで表示するフェードアップ(JSが .is-visible を付与)。
+   JS無効時(html.jsなし)は最初から表示してコンテンツを隠さない */
+.js .fade-up {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.fade-up.is-visible {
+.js .fade-up.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -207,7 +219,12 @@ button {
 /* ==========================================================
    04. ローディング
    ========================================================== */
+/* JS無効時は表示しない(解除役のJSが動かないため) */
 .loader {
+  display: none;
+}
+
+.js .loader {
   position: fixed;
   inset: 0;
   z-index: 300;
@@ -219,7 +236,7 @@ button {
 }
 
 /* JSが load 後に付与 */
-.loader.is-done {
+.js .loader.is-done {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -256,7 +273,7 @@ button {
   transition: box-shadow var(--transition), background-color var(--transition);
 }
 
-/* JSがスクロール時に付与(任意) */
+/* JSがスクロール時に付与 */
 .header.is-scrolled {
   box-shadow: var(--shadow-sm);
 }
@@ -385,6 +402,22 @@ button {
   visibility: visible;
 }
 
+/* JS無効時はハンバーガーが機能しないため、ナビを畳まず常時表示 */
+html:not(.js) .header__nav {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  visibility: visible;
+}
+
+html:not(.js) .header__toggle {
+  display: none;
+}
+
 .header__list {
   display: flex;
   flex-direction: column;
@@ -406,7 +439,7 @@ button {
   color: var(--color-primary);
 }
 
-/* ナビ展開時の背景オーバーレイ(JSがbodyに .is-menu-open を付与する想定) */
+/* ナビ展開時の背景オーバーレイ(JSがbodyに .is-menu-open を付与) */
 body.is-menu-open::after {
   content: "";
   position: fixed;
@@ -459,14 +492,15 @@ body.is-menu-open::after {
   margin-bottom: 24px;
 }
 
-/* タイピング演出(等幅表示のためカーソル付きで一文字ずつ表示) */
+/* タイピング演出(カーソル付きで一文字ずつ表示)。
+   文字数は HTML 側の style="--typing-chars: N;" で指定し、
+   表示テキストの文字数と必ず一致させる */
 .typing {
   display: inline-block;
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   border-right: 2px solid var(--color-primary);
-  /* HTML側の style="--typing-chars: 30;" を利用 */
   width: calc(var(--typing-chars, 30) * 1ch);
   animation:
     typing 2.4s steps(var(--typing-chars, 30)) 0.5s both,
@@ -602,11 +636,6 @@ body.is-menu-open::after {
   gap: 24px;
 }
 
-/* フィルターで非表示(JSが付与) */
-.card.is-hidden {
-  display: none;
-}
-
 .card {
   display: flex;
   flex-direction: column;
@@ -617,6 +646,11 @@ body.is-menu-open::after {
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition),
     background-color var(--transition), border-color var(--transition);
+}
+
+/* フィルターで非表示(JSが付与) */
+.card.is-hidden {
+  display: none;
 }
 
 .card:hover {
@@ -659,6 +693,12 @@ body.is-menu-open::after {
   border-radius: var(--radius-full);
 }
 
+/* ステータス表示用の控えめなバッジ(Coming Soon 等) */
+.card__badge--muted {
+  color: var(--color-text-sub);
+  background: var(--color-bg-sub);
+}
+
 .card__title {
   font-size: 1.125rem;
   font-weight: 700;
@@ -691,11 +731,6 @@ body.is-menu-open::after {
 .card--coming:hover {
   transform: none;
   box-shadow: none;
-}
-
-.card--coming .card__badge:last-child {
-  color: var(--color-text-sub);
-  background: var(--color-bg-sub);
 }
 
 /* ==========================================================
@@ -732,14 +767,16 @@ body.is-menu-open::after {
 .skill-bar__fill {
   display: block;
   height: 100%;
-  width: 0; /* 初期は0。表示時にアニメーションで伸ばす */
+  width: 0; /* 初期は0。可視化時にアニメーションで伸ばす */
   background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
   border-radius: var(--radius-full);
   transition: width 1s ease 0.2s;
 }
 
-/* fade-up が可視化されたタイミングでバーを伸ばす */
-.skill-list__item.is-visible .skill-bar__fill {
+/* fade-up が可視化されたタイミングでバーを伸ばす。
+   JS無効時は最初から最終値を表示 */
+.skill-list__item.is-visible .skill-bar__fill,
+html:not(.js) .skill-bar__fill {
   width: var(--skill-level, 0%);
 }
 
@@ -823,6 +860,7 @@ body.is-menu-open::after {
   }
 }
 
+/* 日付・本文(timeline__body はレイアウト用ラッパー) */
 .timeline__date {
   display: inline-block;
   font-family: var(--font-en);
@@ -911,7 +949,7 @@ body.is-menu-open::after {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
-/* JSがバリデーションエラー時に付与する想定 */
+/* バリデーションエラー時(JSが付与) */
 .form__input.is-invalid {
   border-color: var(--color-error);
 }
@@ -1119,7 +1157,7 @@ body.is-menu-open::after {
     transition-duration: 0.01ms !important;
   }
 
-/* タイピング演出は即時表示に */
+  /* タイピング演出は即時表示に */
   .typing {
     width: auto;
     border-right: none;
@@ -1127,7 +1165,7 @@ body.is-menu-open::after {
   }
 
   /* フェードアップは最初から表示状態に */
-  .fade-up {
+  .js .fade-up {
     opacity: 1;
     transform: none;
   }
@@ -1143,14 +1181,14 @@ body.is-menu-open::after {
     animation: none;
   }
 
-  /* ローディングスピナーを停止(JSで確実に解除される前提) */
+  /* ローディングスピナーを停止 */
   .loader__spinner {
     animation: none;
   }
 }
 
 /* ==========================================================
-   17. 印刷対応(おまけ: 不要なUIを非表示)
+   17. 印刷対応(不要なUIを非表示)
    ========================================================== */
 @media print {
   .loader,
@@ -1165,7 +1203,7 @@ body.is-menu-open::after {
     position: static;
   }
 
-  .fade-up {
+  .js .fade-up {
     opacity: 1;
     transform: none;
   }
