@@ -1,570 +1,320 @@
-```javascript
-/* ==========================================================================
-   まーらいおん Portfolio - script.js
-   --------------------------------------------------------------------------
-   機能
-   1. ローディング
-   2. テーマ切替
-   3. ヘッダーのスクロール状態
-   4. ハンバーガーメニュー
-   5. ページトップボタン
-   6. スクロール表示アニメーション
-   7. Works フィルター
-   8. 年号の自動更新
-   ========================================================================== */
+/* ==========================================================
+   script.js | まーらいおん Portfolio
+   ----------------------------------------------------------
+   設計方針
+   - 機能ごとに init〇〇() へ分割(1機能 = 1関数)
+   - DOM要素が無くても落ちないようガード節を徹底
+   - 状態クラス(.is-*)の付与のみ行い、見た目はCSSに委譲
+   - prefers-reduced-motion / JS無効環境に配慮
+   ----------------------------------------------------------
+   目次
+   01. ユーティリティ
+   02. ローディング解除
+   03. テーマ切替(ダークモード)
+   04. モバイルナビ(ハンバーガーメニュー)
+   05. スクロール連動(ヘッダー影 / ページトップボタン)
+   06. スクロール表示アニメーション(fade-up)
+   07. Worksフィルター
+   08. お問い合わせフォーム(バリデーション)
+   09. コピーライト年号
+   10. 初期化
+   ========================================================== */
+"use strict";
 
+(() => {
+  /* ========================================================
+     01. ユーティリティ
+     ======================================================== */
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-/* ==========================================================================
-   1. DOM読み込み
-   ========================================================================== */
+  const prefersReducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-document.addEventListener("DOMContentLoaded", () => {
+  /* ========================================================
+     02. ローディング解除
+     - window load 後に .is-done を付与してフェードアウト
+     - 万一 load が発火しなくても4秒で強制解除(フェイルセーフ)
+     ======================================================== */
+  const initLoader = () => {
+    const loader = $("#loader");
+    if (!loader) return;
 
-  /* ------------------------------------------------------------------------
-     要素取得
-     ------------------------------------------------------------------------ */
+    const done = () => loader.classList.add("is-done");
 
-  const html = document.documentElement;
-  const body = document.body;
-
-  const loader = document.querySelector(".loader");
-
-  const themeBtn =
-    document.querySelector(".theme-toggle");
-
-  const header =
-    document.querySelector(".header");
-
-  const nav =
-    document.querySelector(".header__nav");
-
-  const navToggle =
-    document.querySelector(".header__toggle");
-
-  const pageTop =
-    document.querySelector(".to-top");
-
-  const filterButtons =
-    document.querySelectorAll(".filter-btn");
-
-  const cards =
-    document.querySelectorAll(".card[data-category]");
-
-  const animatedElements =
-    document.querySelectorAll(
-      ".fade-up, .skill-list__item"
-    );
-
-
-  /* ==========================================================================
-     2. ローディング
-     ========================================================================== */
-
-  /*
-     window.loadではなくDOMContentLoaded後にも処理できるようにする。
-
-     画像などページ内の素材が完全に読み込まれた後に
-     loaderを消す処理はwindow.loadで実行。
-  */
-
-  window.addEventListener("load", () => {
-
-    if (loader) {
-      loader.classList.add("is-done");
+    if (document.readyState === "complete") {
+      done();
+    } else {
+      window.addEventListener("load", done, { once: true });
     }
-
-  });
-
-
-  /* ==========================================================================
-     3. テーマ切替
-     ========================================================================== */
-
-  const savedTheme =
-    localStorage.getItem("theme");
-
-
-  /*
-     保存されているテーマを復元
-  */
-
-  if (
-    savedTheme === "dark" ||
-    savedTheme === "light"
-  ) {
-
-    html.dataset.theme =
-      savedTheme;
-
-  } else {
-
-    /*
-       保存設定がない場合は
-       OSのダークモード設定を確認
-    */
-
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-
-    html.dataset.theme =
-      prefersDark
-        ? "dark"
-        : "light";
-  }
-
-
-  /*
-     aria-pressedを初期状態にも反映
-  */
-
-  const updateThemeButton = () => {
-
-    if (!themeBtn) return;
-
-    const isDark =
-      html.dataset.theme === "dark";
-
-    themeBtn.setAttribute(
-      "aria-pressed",
-      String(isDark)
-    );
-
-    themeBtn.setAttribute(
-      "aria-label",
-      isDark
-        ? "ライトモードに切り替える"
-        : "ダークモードに切り替える"
-    );
+    setTimeout(done, 4000);
   };
 
+  /* ========================================================
+     03. テーマ切替(ダークモード)
+     - 優先順位: localStorage > OS設定(prefers-color-scheme)
+     - html[data-theme] と aria-pressed を常に同期
+     - localStorage が使えない環境でも動作(try/catch)
+     ======================================================== */
+  const THEME_STORAGE_KEY = "portfolio-theme";
 
-  updateThemeButton();
+  const initTheme = () => {
+    const toggle = $("#themeToggle");
+    if (!toggle) return;
 
+    const root = document.documentElement;
 
-  /*
-     テーマボタンクリック
-  */
-
-  themeBtn?.addEventListener(
-    "click",
-    () => {
-
-      const current =
-        html.dataset.theme;
-
-      const next =
-        current === "dark"
-          ? "light"
-          : "dark";
-
-      html.dataset.theme =
-        next;
-
-      localStorage.setItem(
-        "theme",
-        next
-      );
-
-      updateThemeButton();
-
-    }
-  );
-
-
-  /* ==========================================================================
-     4. ヘッダーのスクロール状態
-     ========================================================================== */
-
-  const updateScrollState = () => {
-
-    const scrollY =
-      window.scrollY;
-
-    /*
-       50px以上スクロールしたら
-       .is-scrolledを付ける
-    */
-
-    header?.classList.toggle(
-      "is-scrolled",
-      scrollY > 50
-    );
-
-
-    /*
-       400px以上スクロールしたら
-       ページトップボタン表示
-    */
-
-    pageTop?.classList.toggle(
-      "is-show",
-      scrollY > 400
-    );
-
-  };
-
-
-  /*
-     初期状態も一度確認
-  */
-
-  updateScrollState();
-
-
-  /*
-     スクロールイベント
-  */
-
-  window.addEventListener(
-    "scroll",
-    updateScrollState,
-    {
-      passive: true
-    }
-  );
-
-
-  /* ==========================================================================
-     5. ハンバーガーメニュー
-     ========================================================================== */
-
-  const closeMenu = () => {
-
-    if (!nav || !navToggle) return;
-
-    nav.classList.remove(
-      "is-open"
-    );
-
-    navToggle.classList.remove(
-      "is-open"
-    );
-
-    navToggle.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-
-    body.classList.remove(
-      "menu-open"
-    );
-
-  };
-
-
-  const openMenu = () => {
-
-    if (!nav || !navToggle) return;
-
-    nav.classList.add(
-      "is-open"
-    );
-
-    navToggle.classList.add(
-      "is-open"
-    );
-
-    navToggle.setAttribute(
-      "aria-expanded",
-      "true"
-    );
-
-    body.classList.add(
-      "menu-open"
-    );
-
-  };
-
-
-  navToggle?.addEventListener(
-    "click",
-    () => {
-
-      const isOpen =
-        nav?.classList.contains(
-          "is-open"
-        );
-
-      if (isOpen) {
-        closeMenu();
-      } else {
-        openMenu();
+    const getStoredTheme = () => {
+      try {
+        return localStorage.getItem(THEME_STORAGE_KEY);
+      } catch {
+        return null;
       }
+    };
 
-    }
-  );
-
-
-  /*
-     ナビゲーションをクリックしたら閉じる
-  */
-
-  nav?.querySelectorAll("a").forEach(
-    (link) => {
-
-      link.addEventListener(
-        "click",
-        () => {
-          closeMenu();
-        }
-      );
-
-    }
-  );
-
-
-  /*
-     ESCキーでメニューを閉じる
-  */
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
-      if (
-        event.key === "Escape"
-      ) {
-
-        closeMenu();
-
+    const storeTheme = (theme) => {
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+      } catch {
+        /* プライベートモード等で保存不可でも継続 */
       }
+    };
 
-    }
-  );
+    const applyTheme = (theme) => {
+      root.dataset.theme = theme;
+      toggle.setAttribute("aria-pressed", String(theme === "dark"));
+    };
 
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    applyTheme(getStoredTheme() ?? (systemPrefersDark.matches ? "dark" : "light"));
 
-  /*
-     ウィンドウサイズがPCに戻ったら
-     メニュー状態をリセット
-  */
+    toggle.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      applyTheme(next);
+      storeTheme(next);
+    });
 
-  window.addEventListener(
-    "resize",
-    () => {
+    // 未保存ユーザーはOS設定の変更に追従
+    systemPrefersDark.addEventListener("change", (event) => {
+      if (!getStoredTheme()) applyTheme(event.matches ? "dark" : "light");
+    });
+  };
 
-      if (
-        window.innerWidth > 820
-      ) {
+  /* ========================================================
+     04. モバイルナビ(ハンバーガーメニュー)
+     - .is-open / body.is-menu-open / aria-expanded を同期
+     - リンク選択・Escキー・オーバーレイクリックで閉じる
+     ======================================================== */
+  const initMenu = () => {
+    const toggle = $("#menuToggle");
+    const nav = $("#globalNav");
+    if (!toggle || !nav) return;
 
-        closeMenu();
+    const setOpen = (open) => {
+      toggle.classList.toggle("is-open", open);
+      nav.classList.toggle("is-open", open);
+      document.body.classList.toggle("is-menu-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+    };
 
+    const isOpen = () => toggle.getAttribute("aria-expanded") === "true";
+
+    toggle.addEventListener("click", () => setOpen(!isOpen()));
+
+    // ナビ内リンク選択で閉じる
+    nav.addEventListener("click", (event) => {
+      if (event.target.closest("a")) setOpen(false);
+    });
+
+    // Escキーで閉じてトグルへフォーカスを戻す
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && isOpen()) {
+        setOpen(false);
+        toggle.focus();
       }
+    });
 
-    }
-  );
+    // ナビ外(オーバーレイ)クリックで閉じる
+    document.addEventListener("click", (event) => {
+      if (isOpen() && !event.target.closest("#globalNav, #menuToggle")) {
+        setOpen(false);
+      }
+    });
+  };
 
+  /* ========================================================
+     05. スクロール連動(ヘッダー影 / ページトップボタン)
+     ======================================================== */
+  const initScrollEffects = () => {
+    const header = $("#header");
+    const toTop = $("#toTop");
 
-  /* ==========================================================================
-     6. ページトップボタン
-     ========================================================================== */
+    const onScroll = () => {
+      const y = window.scrollY;
+      header?.classList.toggle("is-scrolled", y > 8);
+      toTop?.classList.toggle("is-visible", y > 400);
+    };
 
-  pageTop?.addEventListener(
-    "click",
-    () => {
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
+    toTop?.addEventListener("click", () => {
       window.scrollTo({
         top: 0,
-        behavior: "smooth"
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
       });
+    });
+  };
 
+  /* ========================================================
+     06. スクロール表示アニメーション(fade-up)
+     - IntersectionObserver で可視化時に .is-visible を付与
+     - 非対応環境・reduce設定時は即時表示
+     ======================================================== */
+  const initReveal = () => {
+    const targets = $$(".fade-up");
+    if (!targets.length) return;
+
+    const showAll = () => targets.forEach((el) => el.classList.add("is-visible"));
+
+    if (!("IntersectionObserver" in window) || prefersReducedMotion()) {
+      showAll();
+      return;
     }
-  );
 
-
-  /* ==========================================================================
-     7. スクロール表示アニメーション
-     ========================================================================== */
-
-  /*
-     IntersectionObserverが使えるブラウザ
-     */
-
-  if (
-    "IntersectionObserver"
-    in window
-  ) {
-
-    const observer =
-      new IntersectionObserver(
-        (entries) => {
-
-          entries.forEach(
-            (entry) => {
-
-              if (
-                entry.isIntersecting
-              ) {
-
-                entry.target.classList.add(
-                  "is-visible"
-                );
-
-                /*
-                   一度表示したら監視解除
-                   */
-
-                observer.unobserve(
-                  entry.target
-                );
-
-              }
-
-            }
-          );
-
-        },
-        {
-          threshold: 0.15
-        }
-      );
-
-
-    animatedElements.forEach(
-      (element) => {
-
-        observer.observe(
-          element
-        );
-
-      }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px" }
     );
 
+    targets.forEach((el) => observer.observe(el));
+  };
 
-  } else {
+  /* ========================================================
+     07. Worksフィルター
+     - data-filter とカードの data-category を突合
+     - .is-active / aria-pressed / .is-hidden を同期
+     ======================================================== */
+  const initWorksFilter = () => {
+    const buttons = $$(".filter-btn");
+    const cards = $$(".works__grid .card");
+    if (!buttons.length || !cards.length) return;
 
-    /*
-       IntersectionObserver非対応ブラウザ用
-    */
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const { filter } = button.dataset;
 
-    animatedElements.forEach(
-      (element) => {
+        buttons.forEach((b) => {
+          const isActive = b === button;
+          b.classList.toggle("is-active", isActive);
+          b.setAttribute("aria-pressed", String(isActive));
+        });
 
-        element.classList.add(
-          "is-visible"
-        );
+        cards.forEach((card) => {
+          const show = filter === "all" || card.dataset.category === filter;
+          card.classList.toggle("is-hidden", !show);
+        });
+      });
+    });
+  };
 
-      }
-    );
+  /* ========================================================
+     08. お問い合わせフォーム(バリデーション)
+     - blur時に項目単位、submit時に全項目を検証
+     - .is-invalid / aria-invalid / エラー文言を同期
+     - 送信処理は Formspree 等の導入時に fetch へ差し替え
+     ======================================================== */
+  const initContactForm = () => {
+    const form = $("#contactForm");
+    if (!form) return;
 
-  }
+    const result = $("#formResult");
+    const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    const validators = {
+      name: (value) => (value ? "" : "お名前を入力してください。"),
+      email: (value) => {
+        if (!value) return "メールアドレスを入力してください。";
+        return EMAIL_PATTERN.test(value) ? "" : "メールアドレスの形式が正しくありません。";
+      },
+      message: (value) => (value ? "" : "メッセージを入力してください。"),
+    };
 
-  /* ==========================================================================
-     8. Works フィルター
-     ========================================================================== */
+    const setFieldError = (fieldName, message) => {
+      const input = form.elements[fieldName];
+      const errorEl = form.querySelector(`[data-error-for="${fieldName}"]`);
+      if (!input) return;
 
-  /*
-     フィルターボタンが存在しない場合は
-     何もしない
-  */
+      input.classList.toggle("is-invalid", Boolean(message));
+      input.setAttribute("aria-invalid", message ? "true" : "false");
+      if (errorEl) errorEl.textContent = message;
+    };
 
-  filterButtons.forEach(
-    (button) => {
+    /** @returns {boolean} 妥当ならtrue */
+    const validateField = (fieldName) => {
+      const input = form.elements[fieldName];
+      if (!input) return true;
+      const message = validators[fieldName](input.value.trim());
+      setFieldError(fieldName, message);
+      return !message;
+    };
 
-      button.addEventListener(
-        "click",
-        () => {
+    const setResult = (message, type) => {
+      if (!result) return;
+      result.textContent = message;
+      result.classList.toggle("is-success", type === "success");
+      result.classList.toggle("is-error", type === "error");
+    };
 
-          /*
-             現在選択されているカテゴリー
-          */
+    // 入力を離れたタイミングで項目単位の検証
+    Object.keys(validators).forEach((fieldName) => {
+      form.elements[fieldName]?.addEventListener("blur", () => validateField(fieldName));
+    });
 
-          const filter =
-            button.dataset.filter;
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
 
-
-          /*
-             ボタン状態更新
-          */
-
-          filterButtons.forEach(
-            (btn) => {
-
-              const isActive =
-                btn === button;
-
-              btn.classList.toggle(
-                "is-active",
-                isActive
-              );
-
-              btn.setAttribute(
-                "aria-pressed",
-                String(isActive)
-              );
-
-            }
-          );
-
-
-          /*
-             カード表示 / 非表示
-          */
-
-          cards.forEach(
-            (card) => {
-
-              const category =
-                card.dataset.category;
-
-              const shouldHide =
-                filter !== "all" &&
-                category !== filter;
-
-              card.classList.toggle(
-                "is-hidden",
-                shouldHide
-              );
-
-            }
-          );
-
-        }
+      const invalidFields = Object.keys(validators).filter(
+        (fieldName) => !validateField(fieldName)
       );
 
-    }
-  );
+      if (invalidFields.length > 0) {
+        setResult("入力内容をご確認ください。", "error");
+        form.elements[invalidFields[0]]?.focus();
+        return;
+      }
 
+      // TODO: Formspree等の導入時、ここを fetch(form.action, ...) に差し替え
+      setResult("送信ありがとうございました。2〜3日以内にご返信いたします。", "success");
+      form.reset();
+    });
+  };
 
-  /* ==========================================================================
-     9. 年号の自動更新
-     ========================================================================== */
+  /* ========================================================
+     09. コピーライト年号
+     ======================================================== */
+  const initCopyrightYear = () => {
+    const year = $("#year");
+    if (year) year.textContent = String(new Date().getFullYear());
+  };
 
-  /*
-     HTML側に
-
-     <span id="year"></span>
-
-     がある場合、自動的に現在の年を表示
-  */
-
-  const year =
-    document.querySelector("#year");
-
-  if (year) {
-
-    year.textContent =
-      new Date().getFullYear();
-
-  }
-
-
-  /* ==========================================================================
-     10. 現在のテーマをHTMLに反映
-     ========================================================================== */
-
-  /*
-     CSS transitionを利用するため、
-     初期表示時にも確実にテーマを設定
-  */
-
-  html.classList.add(
-    "theme-ready"
-  );
-
-
-});
-```
+  /* ========================================================
+     10. 初期化(script.js は defer 読込のためDOM構築済み)
+     ======================================================== */
+  initLoader();
+  initTheme();
+  initMenu();
+  initScrollEffects();
+  initReveal();
+  initWorksFilter();
+  initContactForm();
+  initCopyrightYear();
+})();
