@@ -676,4 +676,497 @@ body.is-menu-open::after {
   transition: opacity var(--transition);
 }
 
-.card
+.card__link:hover {
+  opacity: 0.7;
+}
+
+/* Coming Soonカード(画像なし・控えめな見た目) */
+.card--coming {
+  justify-content: center;
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+}
+
+.card--coming:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.card--coming .card__badge:last-child {
+  color: var(--color-text-sub);
+  background: var(--color-bg-sub);
+}
+
+/* ==========================================================
+   10. Skills(スキルバー)
+   ========================================================== */
+.skill-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.skill-list__item {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.skill-list__name {
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.skill-bar {
+  height: 10px;
+  background: var(--color-bg-sub);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.skill-bar__fill {
+  display: block;
+  height: 100%;
+  width: 0; /* 初期は0。表示時にアニメーションで伸ばす */
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: var(--radius-full);
+  transition: width 1s ease 0.2s;
+}
+
+/* fade-up が可視化されたタイミングでバーを伸ばす */
+.skill-list__item.is-visible .skill-bar__fill {
+  width: var(--skill-level, 0%);
+}
+
+.skill-list__stars {
+  font-size: 0.875rem;
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.skills__note {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-text-sub);
+}
+
+/* ==========================================================
+   11. Roadmap(タイムライン)
+   ========================================================== */
+.timeline {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  padding-left: 24px;
+}
+
+/* 縦のライン */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline__item {
+  position: relative;
+  padding: 0 0 40px 24px;
+}
+
+.timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline__dot {
+  position: absolute;
+  top: 6px;
+  left: -24px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 3px solid var(--color-border);
+  transition: border-color var(--transition), background-color var(--transition);
+}
+
+/* 完了 */
+.timeline__item.is-done .timeline__dot {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* 現在進行中(パルスで強調) */
+.timeline__item.is-current .timeline__dot {
+  border-color: var(--color-primary);
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 40%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.timeline__date {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.timeline__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.timeline__text {
+  font-size: 0.9375rem;
+  color: var(--color-text-sub);
+}
+
+/* ==========================================================
+   12. Contact(フォーム / SNS)
+   ========================================================== */
+.contact__lead {
+  text-align: center;
+  margin-bottom: 40px;
+  color: var(--color-text-sub);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+.form__row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form__label {
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.form__req {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-error);
+  border-radius: var(--radius-sm);
+  vertical-align: middle;
+}
+
+.form__input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition), background-color var(--transition);
+}
+
+.form__input::placeholder {
+  color: var(--color-text-sub);
+  opacity: 0.7;
+}
+
+.form__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+/* JSがバリデーションエラー時に付与する想定 */
+.form__input.is-invalid {
+  border-color: var(--color-error);
+}
+
+.form__textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.form__error {
+  min-height: 1.2em; /* 表示時のガタつき防止 */
+  font-size: 0.8125rem;
+  color: var(--color-error);
+}
+
+/* 送信結果メッセージ(JSが is-success / is-error を付与) */
+.form__result {
+  text-align: center;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.form__result.is-success {
+  color: var(--color-success);
+}
+
+.form__result.is-error {
+  color: var(--color-error);
+}
+
+/* SNSリンク */
+.sns {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.sns a {
+  display: inline-block;
+  padding: 10px 24px;
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  transition: color var(--transition), border-color var(--transition),
+    transform var(--transition);
+}
+
+.sns a:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================
+   13. フッター
+   ========================================================== */
+.footer {
+  padding: 40px 20px;
+  background: var(--color-bg-sub);
+  border-top: 1px solid var(--color-border);
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+.footer__inner {
+  max-width: var(--width-content);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer__logo {
+  font-family: var(--font-en);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.footer__copy {
+  font-size: 0.8125rem;
+  color: var(--color-text-sub);
+}
+
+/* ==========================================================
+   14. ページトップボタン
+   ========================================================== */
+.to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  /* 初期は非表示。JSがスクロール量に応じて .is-visible を付与 */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity var(--transition), visibility var(--transition),
+    transform var(--transition), background-color var(--transition);
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.to-top:hover {
+  background: var(--color-primary-dark);
+}
+
+/* ==========================================================
+   15. レスポンシブ(タブレット / PC)
+   ========================================================== */
+
+/* --- タブレット(600px〜) --- */
+@media (min-width: 600px) {
+  .works__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form {
+    padding: 40px;
+  }
+
+  .skill-list__item {
+    grid-template-columns: 140px 1fr auto;
+  }
+}
+
+/* --- PC(960px〜): ナビを横並びに切り替え --- */
+@media (min-width: 960px) {
+  :root {
+    --space-section: 112px;
+  }
+
+  /* ハンバーガーを隠し、通常ナビを表示 */
+  .header__toggle {
+    display: none;
+  }
+
+  .header__nav {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+  }
+
+  .header__list {
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .header__list a {
+    padding: 8px 14px;
+    font-size: 0.9375rem;
+  }
+
+  .header__right {
+    order: 3;
+  }
+
+  /* PCではオーバーレイ不要 */
+  body.is-menu-open::after {
+    content: none;
+  }
+
+  .works__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .to-top {
+    right: 32px;
+    bottom: 32px;
+  }
+}
+
+/* ==========================================================
+   16. アニメーション抑制(prefers-reduced-motion)
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+/* タイピング演出は即時表示に */
+  .typing {
+    width: auto;
+    border-right: none;
+    animation: none;
+  }
+
+  /* フェードアップは最初から表示状態に */
+  .fade-up {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* スキルバーはアニメーションなしで最終値を表示 */
+  .skill-list__item .skill-bar__fill {
+    width: var(--skill-level, 0%);
+    transition: none;
+  }
+
+  /* 現在進行中ドットのパルスを停止 */
+  .timeline__item.is-current .timeline__dot {
+    animation: none;
+  }
+
+  /* ローディングスピナーを停止(JSで確実に解除される前提) */
+  .loader__spinner {
+    animation: none;
+  }
+}
+
+/* ==========================================================
+   17. 印刷対応(おまけ: 不要なUIを非表示)
+   ========================================================== */
+@media print {
+  .loader,
+  .header__toggle,
+  .theme-toggle,
+  .to-top,
+  .skip-link {
+    display: none;
+  }
+
+  .header {
+    position: static;
+  }
+
+  .fade-up {
+    opacity: 1;
+    transform: none;
+  }
+}
