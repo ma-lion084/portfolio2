@@ -3,216 +3,340 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="まーらいおんのポートフォリオ。Web制作×動画編集を軸に、制作実績を紹介しています。">
+  <meta name="color-scheme" content="light dark">
   <title>まーらいおん | Web Developer / Video Creator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- JS有効時のみ演出系(ローダー等)を発動させるフラグ。
+       JS無効環境でローダーが画面を覆い続ける事故を防ぐ -->
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
 
-  <!-- ヘッダー -->
-  <header class="header">
-    <div class="container header-inner">
-      <a href="#" class="logo">まーらいおん</a>
-      <button id="theme-toggle" class="btn-toggle">ダークモード切り替え</button>
+  <!-- スキップリンク: 本文へ直接ジャンプ(スクリーンリーダー/キーボード操作用) -->
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- ローディング演出: window load後にJSが .is-done を付与(html.js 時のみ表示) -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <span class="loader__spinner"></span>
+  </div>
+
+  <!-- ===== Header ===== -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#top" class="header__logo">まーらいおん</a>
+
+      <div class="header__right">
+        <!-- ダークモード切替: JSが aria-pressed と html[data-theme] を同期 -->
+        <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">
+          <span class="sr-only">ダークモード切り替え</span>
+        </button>
+
+        <button type="button" class="header__toggle" id="menuToggle"
+                aria-label="メニューを開く" aria-expanded="false" aria-controls="globalNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <nav class="header__nav" id="globalNav" aria-label="グローバルナビゲーション">
+        <ul class="header__list">
+          <li><a href="#top">Top</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#works">Works</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <!-- ヒーローセクション -->
-    <section class="hero">
-      <div class="container hero-inner">
-        <div class="icon-wrapper">
-          <div class="icon-placeholder">まーらいおんのアイコン</div>
-        </div>
-        <h1>まーらいおん</h1>
-        <p class="subtitle">Web Developer / Video Creator</p>
-        <p class="catchphrase">「Web制作 × 動画編集」を軸に、使いやすいサイト制作を目指しています。</p>
-        <a href="#works" class="btn btn-primary">制作実績を見る</a>
+  <main id="main">
+
+    <!-- ===== ① Top ===== -->
+    <section class="hero" id="top">
+      <div class="hero__content">
+        <img src="images/profile.jpg" alt="まーらいおんのアイコン" class="hero__photo" width="160" height="160">
+        <h1 class="hero__name">まーらいおん</h1>
+        <!-- --typing-chars は下記テキストの文字数と一致させること(現在29文字) -->
+        <p class="hero__role typing" style="--typing-chars: 29;">Web Developer / Video Creator</p>
+        <p class="hero__copy">
+          「Web制作 × 動画編集」を軸に、<br>
+          使いやすいサイト制作を目指しています。
+        </p>
+        <a href="#works" class="btn btn--primary">制作実績を見る</a>
       </div>
     </section>
 
-    <!-- 自己紹介 -->
-    <section id="about" class="section">
-      <div class="container">
-        <h2 class="section-title">About <span>自己紹介</span></h2>
-        <p class="about-text">
+    <!-- ===== ② About ===== -->
+    <section class="section" id="about">
+      <div class="section__inner">
+        <h2 class="section__title fade-up">About<span class="section__sub">自己紹介</span></h2>
+
+        <p class="about__text fade-up">
           Web制作・動画編集を学びながら、使いやすいサイト制作を目指しています。<br>
-          HTML / CSS / JavaScript を中心に学習中で、動画編集では Premiere Pro や OBS を使った制作経験があります。
+          HTML / CSS / JavaScript を中心に学習中で、動画編集では
+          Premiere Pro や OBS を使った制作経験があります。
         </p>
 
-        <h3>使用ツール</h3>
-        <ul class="tools-list">
-          <li>HTML</li>
-          <li>CSS</li>
-          <li>JavaScript</li>
-          <li>VS Code</li>
-          <li>GitHub</li>
-          <li>Premiere Pro</li>
-          <li>OBS</li>
+        <h3 class="about__heading fade-up">使用ツール</h3>
+        <ul class="tool-list fade-up">
+          <li class="tool-list__item">HTML</li>
+          <li class="tool-list__item">CSS</li>
+          <li class="tool-list__item">JavaScript</li>
+          <li class="tool-list__item">VS Code</li>
+          <li class="tool-list__item">GitHub</li>
+          <li class="tool-list__item">Premiere Pro</li>
+          <li class="tool-list__item">OBS</li>
         </ul>
       </div>
     </section>
 
-    <!-- 制作実績 -->
-    <section id="works" class="section bg-light">
-      <div class="container">
-        <h2 class="section-title">Works <span>制作実績</span></h2>
+    <!-- ===== ③ Works ===== -->
+    <section class="section section--gray" id="works">
+      <div class="section__inner">
+        <h2 class="section__title fade-up">Works<span class="section__sub">制作実績</span></h2>
 
-        <!-- フィルター -->
-        <div class="filter-buttons">
-          <button class="filter-btn active">All</button>
-          <button class="filter-btn">Web制作</button>
-          <button class="filter-btn">動画編集</button>
-          <button class="filter-btn">アプリ</button>
+        <!-- フィルター: JSが data-filter とカード側 data-category を突合して .is-hidden を切替。
+             トグルボタン群のため role="group" + aria-pressed を使用(tablistは不適合) -->
+        <div class="works__filter fade-up" role="group" aria-label="作品カテゴリで絞り込み">
+          <button type="button" class="filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-btn" data-filter="web" aria-pressed="false">Web制作</button>
+          <button type="button" class="filter-btn" data-filter="video" aria-pressed="false">動画編集</button>
+          <button type="button" class="filter-btn" data-filter="app" aria-pressed="false">アプリ</button>
         </div>
 
-        <!-- 実績グリッド -->
-        <div class="works-grid">
-          <!-- 実績 1 -->
-          <article class="card">
-            <div class="card-img">整骨院ホームページのスクリーンショット</div>
-            <div class="card-body">
-              <span class="badge">Web制作</span>
-              <h3>整骨院ホームページ</h3>
-              <p>HTML / CSS / JavaScript で制作した整骨院のホームページ。レスポンシブ対応。</p>
-              <a href="#" class="card-link">サイトを見る →</a>
+        <div class="works__grid">
+
+          <article class="card fade-up" data-category="web">
+            <div class="card__figure">
+              <img src="images/work-seikotsuin.jpg" alt="整骨院ホームページのスクリーンショット" class="card__img" width="640" height="360" loading="lazy">
+            </div>
+            <div class="card__body">
+              <span class="card__badge">Web制作</span>
+              <h3 class="card__title">整骨院ホームページ</h3>
+              <p class="card__text">HTML / CSS / JavaScript で制作した整骨院のホームページ。レスポンシブ対応。</p>
+              <a href="https://ma-lion084.github.io/https-hashimotoseikotuin-HP-sample/" class="card__link" target="_blank" rel="noopener">サイトを見る →</a>
             </div>
           </article>
 
-          <!-- 実績 2 -->
-          <article class="card">
-            <div class="card-img">YouTubeゲーム実況チャンネルのサムネイル</div>
-            <div class="card-body">
-              <span class="badge">動画編集</span>
-              <h3>YouTubeゲーム実況</h3>
-              <p>Premiere Pro と OBS を使用したゲーム実況チャンネルの企画・編集・運営。</p>
-              <a href="#" class="card-link">チャンネルを見る →</a>
+          <article class="card fade-up" data-category="video">
+            <div class="card__figure">
+              <img src="images/work-youtube.jpg" alt="YouTubeゲーム実況チャンネルのサムネイル" class="card__img" width="640" height="360" loading="lazy">
+            </div>
+            <div class="card__body">
+              <span class="card__badge">動画編集</span>
+              <h3 class="card__title">YouTubeゲーム実況</h3>
+              <p class="card__text">Premiere Pro と OBS を使用したゲーム実況チャンネルの企画・編集・運営。</p>
+              <a href="https://www.youtube.com/channel/UCCS2DU565PEn5qqWYDY7l5w" class="card__link" target="_blank" rel="noopener">チャンネルを見る →</a>
             </div>
           </article>
 
-          <!-- 実績 3 -->
-          <article class="card">
-            <div class="card-img">JavaScript作品のスクリーンショット</div>
-            <div class="card-body">
-              <span class="badge">Web制作</span>
-              <h3>JavaScript作品</h3>
-              <p>JavaScriptで制作したインタラクティブな作品。DOM操作やイベント処理を活用。</p>
-              <a href="#" class="card-link">作品を見る →</a>
+          <article class="card fade-up" data-category="web">
+            <div class="card__figure">
+              <img src="images/work-js.jpg" alt="JavaScript作品のスクリーンショット" class="card__img" width="640" height="360" loading="lazy">
+            </div>
+            <div class="card__body">
+              <span class="card__badge">Web制作</span>
+              <h3 class="card__title">JavaScript作品</h3>
+              <p class="card__text">JavaScriptで制作したインタラクティブな作品。DOM操作やイベント処理を活用。</p>
+              <!-- TODO: 作品公開後に href を実URLへ差し替え -->
+              <a href="https://github.com/ma-lion084" class="card__link" target="_blank" rel="noopener">作品を見る →</a>
             </div>
           </article>
 
-          <!-- 実績 4 -->
-          <article class="card">
-            <div class="card-img">GitHubリポジトリのイメージ</div>
-            <div class="card-body">
-              <span class="badge">Web制作</span>
-              <h3>GitHub公開コード</h3>
-              <p>学習の過程で書いたコードをGitHubで公開しています。</p>
-              <a href="#" class="card-link">GitHubを見る →</a>
+          <article class="card fade-up" data-category="web">
+            <div class="card__figure">
+              <img src="images/work-github.jpg" alt="GitHubリポジトリのイメージ" class="card__img" width="640" height="360" loading="lazy">
+            </div>
+            <div class="card__body">
+              <span class="card__badge">Web制作</span>
+              <h3 class="card__title">GitHub公開コード</h3>
+              <p class="card__text">学習の過程で書いたコードをGitHubで公開しています。</p>
+              <a href="https://github.com/ma-lion084" class="card__link" target="_blank" rel="noopener">GitHubを見る →</a>
             </div>
           </article>
 
-          <!-- 実績 5 -->
-          <article class="card">
-            <div class="card-img">アプリ開発イメージ</div>
-            <div class="card-body">
-              <span class="badge">アプリ</span>
-              <h3>Flutterアプリ</h3>
-              <p>現在学習中。オリジナルアプリを今後追加予定です。</p>
-              <span class="coming-soon">Coming Soon</span>
+          <article class="card card--coming fade-up" data-category="app">
+            <div class="card__body">
+              <span class="card__badge">アプリ</span>
+              <h3 class="card__title">Flutterアプリ</h3>
+              <p class="card__text">現在学習中。オリジナルアプリを今後追加予定です。</p>
+              <span class="card__badge card__badge--muted">Coming Soon</span>
             </div>
           </article>
+
         </div>
       </div>
     </section>
 
-    <!-- スキル -->
-    <section id="skills" class="section">
-      <div class="container">
-        <h2 class="section-title">Skills <span>スキル</span></h2>
-        <ul class="skills-list">
-          <li><span class="skill-name">HTML</span> <span class="stars">★★★★☆</span></li>
-          <li><span class="skill-name">CSS</span> <span class="stars">★★★★☆</span></li>
-          <li><span class="skill-name">JavaScript</span> <span class="stars">★★☆☆☆</span></li>
-          <li><span class="skill-name">Premiere Pro</span> <span class="stars">★★★☆☆</span></li>
-          <li><span class="skill-name">OBS</span> <span class="stars">★★★☆☆</span></li>
-          <li><span class="skill-name">Flutter</span> <span class="stars">★☆☆☆☆</span></li>
+    <!-- ===== ④ Skills =====
+         習熟度は style="--skill-level" と aria-valuenow の2箇所で管理。
+         更新時は両方を同じ値に揃えること(例: 80% ↔ 80) -->
+    <section class="section" id="skills">
+      <div class="section__inner">
+        <h2 class="section__title fade-up">Skills<span class="section__sub">スキル</span></h2>
+
+        <ul class="skill-list">
+          <li class="skill-list__item fade-up">
+            <span class="skill-list__name">HTML</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="HTMLの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 80%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★★★☆</span>
+          </li>
+          <li class="skill-list__item fade-up">
+            <span class="skill-list__name">CSS</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="CSSの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 80%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★★★☆</span>
+          </li>
+          <li class="skill-list__item fade-up">
+            <span class="skill-list__name">JavaScript</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" aria-label="JavaScriptの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 40%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★☆☆☆</span>
+          </li>
+          <li class="skill-list__item fade-up">
+            <span class="skill-list__name">Premiere Pro</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="Premiere Proの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 60%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★★☆☆</span>
+          </li>
+          <li class="skill-list__item fade-up">
+            <span class="skill-list__name">OBS</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="OBSの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 60%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★★★☆☆</span>
+          </li>
+          <li class="skill-list__item fade-up">
+            <span class="skill-list__name">Flutter</span>
+            <div class="skill-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Flutterの習熟度">
+              <span class="skill-bar__fill" style="--skill-level: 20%;"></span>
+            </div>
+            <span class="skill-list__stars" aria-hidden="true">★☆☆☆☆</span>
+          </li>
         </ul>
-        <p class="note">※ 星の数は自己評価です。学習の進度に応じて更新しています。</p>
+
+        <p class="skills__note">
+          ※ 星の数は自己評価です。学習の進度に応じて更新しています。
+        </p>
       </div>
     </section>
 
-    <!-- ロードマップ -->
-    <section id="roadmap" class="section bg-light">
-      <div class="container">
-        <h2 class="section-title">Roadmap <span>学習ロードマップ</span></h2>
-        <ol class="roadmap-list">
-          <li class="roadmap-item">
-            <span class="year">2024</span>
-            <h3>HTML / CSS 基礎</h3>
-            <p>マークアップの基礎とレスポンシブデザインを習得。整骨院サイトを制作。</p>
+    <!-- ===== ⑤ Roadmap ===== -->
+    <section class="section section--gray" id="roadmap">
+      <div class="section__inner">
+        <h2 class="section__title fade-up">Roadmap<span class="section__sub">学習ロードマップ</span></h2>
+
+        <ol class="timeline">
+          <li class="timeline__item is-done fade-up">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <div class="timeline__body">
+              <span class="timeline__date">2024</span>
+              <h3 class="timeline__title">HTML / CSS 基礎</h3>
+              <p class="timeline__text">マークアップの基礎とレスポンシブデザインを習得。整骨院サイトを制作。</p>
+            </div>
           </li>
-          <li class="roadmap-item">
-            <span class="year">2025</span>
-            <h3>JavaScript 実践</h3>
-            <p>DOM操作・非同期処理を学習中。動きのあるUIを自作できるように取り組んでいます。</p>
+          <li class="timeline__item is-current fade-up">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <div class="timeline__body">
+              <span class="timeline__date">2025</span>
+              <h3 class="timeline__title">JavaScript 実践</h3>
+              <p class="timeline__text">DOM操作・非同期処理を学習中。動きのあるUIを自作できるように取り組んでいます。</p>
+            </div>
           </li>
-          <li class="roadmap-item">
-            <span class="year">Next</span>
-            <h3>Flutter でアプリ開発</h3>
-            <p>Web制作の知識を活かし、オリジナルアプリのリリースを目標にしています。</p>
+          <li class="timeline__item fade-up">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <div class="timeline__body">
+              <span class="timeline__date">Next</span>
+              <h3 class="timeline__title">Flutter でアプリ開発</h3>
+              <p class="timeline__text">Web制作の知識を活かし、オリジナルアプリのリリースを目標にしています。</p>
+            </div>
           </li>
         </ol>
       </div>
     </section>
 
-    <!-- お問い合わせ -->
-    <section id="contact" class="section">
-      <div class="container">
-        <h2 class="section-title">Contact <span>お問い合わせ</span></h2>
-        <p class="contact-desc">制作のご依頼・ご相談はお気軽にご連絡ください。通常2〜3日以内にご返信いたします。</p>
+    <!-- ===== ⑥ Contact ===== -->
+    <section class="section" id="contact">
+      <div class="section__inner section__inner--narrow">
+        <h2 class="section__title fade-up">Contact<span class="section__sub">お問い合わせ</span></h2>
 
-        <form class="contact-form">
-          <div class="form-group">
-            <label for="name">お名前 <span class="required">必須</span></label>
-            <input type="text" id="name" placeholder="山田 太郎" required>
+        <p class="contact__lead fade-up">
+          制作のご依頼・ご相談はお気軽にご連絡ください。<br>
+          通常2〜3日以内にご返信いたします。
+        </p>
+
+        <!-- action は Formspree / Google Form 等に差し替えてください。
+             novalidate + script.js の initForm() でバリデーションを実施 -->
+        <form class="form fade-up" id="contactForm" action="#" method="post" novalidate>
+          <div class="form__row">
+            <label class="form__label" for="name">お名前<span class="form__req">必須</span></label>
+            <input class="form__input" type="text" id="name" name="name" required autocomplete="name" placeholder="山田 太郎" aria-describedby="error-name">
+            <p class="form__error" id="error-name" data-error-for="name"></p>
           </div>
 
-          <div class="form-group">
-            <label for="email">メールアドレス <span class="required">必須</span></label>
-            <input type="email" id="email" placeholder="example@mail.com" required>
+          <div class="form__row">
+            <label class="form__label" for="email">メールアドレス<span class="form__req">必須</span></label>
+            <input class="form__input" type="email" id="email" name="email" required autocomplete="email" placeholder="example@mail.com" aria-describedby="error-email">
+            <p class="form__error" id="error-email" data-error-for="email"></p>
           </div>
 
-          <div class="form-group">
-            <label for="subject">ご相談内容</label>
-            <select id="subject">
+          <div class="form__row">
+            <label class="form__label" for="subject">ご相談内容</label>
+            <select class="form__input" id="subject" name="subject">
               <option value="web">Web制作について</option>
               <option value="video">動画編集について</option>
               <option value="other">その他</option>
             </select>
           </div>
 
-          <div class="form-group">
-            <label for="message">メッセージ <span class="required">必須</span></label>
-            <textarea id="message" rows="5" placeholder="ご依頼内容やご予算などをご記入ください。" required></textarea>
+          <div class="form__row">
+            <label class="form__label" for="message">メッセージ<span class="form__req">必須</span></label>
+            <textarea class="form__input form__textarea" id="message" name="message" rows="6" required placeholder="ご依頼内容やご予算などをご記入ください。" aria-describedby="error-message"></textarea>
+            <p class="form__error" id="error-message" data-error-for="message"></p>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">送信する</button>
+          <button type="submit" class="btn btn--primary btn--block">送信する</button>
+
+          <!-- 送信結果メッセージ(JSから出力 / aria-liveで読み上げ) -->
+          <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
         </form>
+
+        <ul class="sns fade-up">
+          <li><a href="https://github.com/ma-lion084" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.youtube.com/channel/UCCS2DU565PEn5qqWYDY7l5w" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="mailto:info@example.com">Mail</a></li><!-- TODO: 実アドレスに差し替え -->
+        </ul>
       </div>
     </section>
+
   </main>
 
-  <!-- フッター -->
+  <!-- ===== Footer ===== -->
   <footer class="footer">
-    <div class="container footer-inner">
-      <div class="social-links">
-        <a href="#">GitHub</a>
-        <a href="#">YouTube</a>
-        <a href="#">Mail</a>
-      </div>
-      <p class="copyright">&copy; 2026 ma-lion. All rights reserved.</p>
+    <div class="footer__inner">
+      <p class="footer__logo">まーらいおん</p>
+      <p class="footer__copy">&copy; <span id="year">2025</span> ma-lion. All rights reserved.</p>
     </div>
   </footer>
 
+  <!-- ページトップへ戻る -->
+  <button type="button" class="to-top" id="toTop" aria-label="ページ上部へ戻る">
+    <span aria-hidden="true">↑</span>
+  </button>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
